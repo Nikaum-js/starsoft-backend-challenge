@@ -1,9 +1,8 @@
-import { IsEmail, IsNotEmpty, IsOptional, MinLength } from 'class-validator';
-import { Match } from '../../validators/match.decorator';
+import { IsEmail, IsOptional, IsString, MinLength } from 'class-validator';
 
 export class UpdateUserDto {
   @IsOptional()
-  @IsNotEmpty()
+  @IsString()
   readonly name?: string;
 
   @IsOptional()
@@ -11,16 +10,10 @@ export class UpdateUserDto {
   readonly email?: string;
 
   @IsOptional()
-  @IsNotEmpty()
   @MinLength(6)
   readonly password?: string;
 
   @IsOptional()
-  @IsNotEmpty()
-  @MinLength(6)
-  @Match('password', { message: 'Passwords do not match' })
-  readonly confirmPassword?: string;
-
-  @IsOptional()
+  @IsString()
   readonly avatar_url?: string;
 }

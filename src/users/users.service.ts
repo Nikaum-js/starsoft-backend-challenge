@@ -1,10 +1,11 @@
 import {
-  BadRequestException,
   ConflictException,
   Injectable,
   InternalServerErrorException,
+  NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import * as bcrypt from 'bcrypt';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -18,7 +19,11 @@ export class UsersService {
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
-    const { email } = createUserDto;
+    const { email, password, confirmPassword, ...rest } = createUserDto;
+
+    if (password !== confirmPassword) {
+      throw new ConflictException('Passwords do not match');
+    }
 
     const existingUser = await this.userRepository.findOne({
       where: { email },
@@ -28,7 +33,12 @@ export class UsersService {
       throw new ConflictException('Email already in use');
     }
 
-    const user = this.userRepository.create(createUserDto);
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = this.userRepository.create({
+      email,
+      password: hashedPassword,
+      ...rest,
+    });
     return this.userRepository.save(user);
   }
 
@@ -36,27 +46,30 @@ export class UsersService {
     return this.userRepository.find();
   }
 
-  findOne(id: string): Promise<User> {
-    return this.userRepository.findOne({ where: { id } });
+  async findOne(id: string): Promise<User> {
+    const user = await this.userRepository.findOne({ where: { id } });
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    return user;
   }
 
   async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
-    try {
-      if (
-        updateUserDto.password &&
-        updateUserDto.password !== updateUserDto.confirmPassword
-      ) {
-        throw new BadRequestException('Passwords do not match');
-      }
+    const user = await this.userRepository.findOne({ where: { id } });
 
-      const { confirmPassword, ...userDtoWithoutConfirmPassword } =
-        updateUserDto;
-      await this.userRepository.update(id, userDtoWithoutConfirmPassword);
-      return this.userRepository.findOne({ where: { id } });
-    } catch (error) {
-      console.error('Error updating user:', error);
-      throw new InternalServerErrorException('Error updating user');
+    if (!user) {
+      throw new NotFoundException('User not found');
     }
+
+    const { password, ...rest } = updateUserDto;
+    if (password) {
+      const hashedPassword = await bcrypt.hash(password, 10);
+      Object.assign(user, rest, { password: hashedPassword });
+    } else {
+      Object.assign(user, rest);
+    }
+
+    return this.userRepository.save(user);
   }
 
   async remove(id: string): Promise<void> {

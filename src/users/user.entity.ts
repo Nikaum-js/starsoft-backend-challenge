@@ -1,5 +1,12 @@
+import * as bcrypt from 'bcrypt';
 import { IsEmail, IsNotEmpty, MinLength } from 'class-validator';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  BeforeInsert,
+  BeforeUpdate,
+  Column,
+  Entity,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity()
 export class User {
@@ -20,4 +27,16 @@ export class User {
 
   @Column({ nullable: true })
   avatar_url: string;
+
+  @BeforeInsert()
+  async hashPasswordBeforeInsert() {
+    this.password = await bcrypt.hash(this.password, 10);
+  }
+
+  @BeforeUpdate()
+  async hashPasswordBeforeUpdate() {
+    if (this.password) {
+      this.password = await bcrypt.hash(this.password, 10);
+    }
+  }
 }
