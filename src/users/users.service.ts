@@ -45,7 +45,6 @@ export class UsersService {
 
     const savedUser = await this.userRepository.save(user);
 
-    // Produzir mensagem para Kafka
     this.kafkaClient.emit('user_created', {
       id: savedUser.id,
       email: savedUser.email,
@@ -83,7 +82,6 @@ export class UsersService {
 
     const updatedUser = await this.userRepository.save(user);
 
-    // Produzir mensagem para Kafka
     this.kafkaClient.emit('user_updated', {
       id: updatedUser.id,
       email: updatedUser.email,
@@ -96,7 +94,6 @@ export class UsersService {
     const user = await this.findOne(id);
     await this.userRepository.remove(user);
 
-    // Produzir mensagem para Kafka
     this.kafkaClient.emit('user_deleted', {
       id: user.id,
       email: user.email,

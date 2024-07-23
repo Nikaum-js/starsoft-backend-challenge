@@ -25,9 +25,6 @@ export class User {
   @MinLength(6)
   password: string;
 
-  @Column({ nullable: true })
-  avatar_url: string;
-
   @BeforeInsert()
   async hashPasswordBeforeInsert() {
     this.password = await bcrypt.hash(this.password, 10);

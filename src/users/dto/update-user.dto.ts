@@ -16,9 +16,4 @@ export class UpdateUserDto {
   @IsOptional()
   @MinLength(6)
   readonly password?: string;
-
-  @ApiPropertyOptional({ description: 'Avatar URL of the user' })
-  @IsOptional()
-  @IsString()
-  readonly avatar_url?: string;
 }

@@ -19,7 +19,4 @@ export class CreateUserDto {
   @IsNotEmpty()
   @MinLength(6)
   readonly confirmPassword: string;
-
-  @ApiProperty({ description: 'Avatar URL of the user', required: false })
-  readonly avatar_url?: string;
 }
