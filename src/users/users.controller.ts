@@ -22,17 +22,17 @@ export class UsersController {
   }
 
   @Get()
-  findAll(): Promise<User[]> {
+  async findAll(): Promise<User[]> {
     return this.usersService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): Promise<User> {
+  async findOne(@Param('id') id: string): Promise<User> {
     return this.usersService.findOne(id);
   }
 
   @Put(':id')
-  update(
+  async update(
     @Param('id') id: string,
     @Body() updateUserDto: UpdateUserDto,
   ): Promise<User> {
@@ -40,7 +40,7 @@ export class UsersController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string): Promise<void> {
+  async remove(@Param('id') id: string): Promise<void> {
     return this.usersService.remove(id);
   }
 }

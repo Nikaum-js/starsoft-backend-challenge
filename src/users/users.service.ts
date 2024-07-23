@@ -2,7 +2,6 @@ import {
   ConflictException,
   Inject,
   Injectable,
-  InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
@@ -46,6 +45,7 @@ export class UsersService {
 
     const savedUser = await this.userRepository.save(user);
 
+    // Produzir mensagem para Kafka
     this.kafkaClient.emit('user_created', {
       id: savedUser.id,
       email: savedUser.email,
@@ -54,7 +54,7 @@ export class UsersService {
     return savedUser;
   }
 
-  findAll(): Promise<User[]> {
+  async findAll(): Promise<User[]> {
     return this.userRepository.find();
   }
 
@@ -81,15 +81,25 @@ export class UsersService {
       Object.assign(user, rest);
     }
 
-    return this.userRepository.save(user);
+    const updatedUser = await this.userRepository.save(user);
+
+    // Produzir mensagem para Kafka
+    this.kafkaClient.emit('user_updated', {
+      id: updatedUser.id,
+      email: updatedUser.email,
+    });
+
+    return updatedUser;
   }
 
   async remove(id: string): Promise<void> {
-    try {
-      await this.userRepository.delete(id);
-    } catch (error) {
-      console.error('Error deleting user:', error);
-      throw new InternalServerErrorException('Error deleting user');
-    }
+    const user = await this.findOne(id);
+    await this.userRepository.remove(user);
+
+    // Produzir mensagem para Kafka
+    this.kafkaClient.emit('user_deleted', {
+      id: user.id,
+      email: user.email,
+    });
   }
 }

@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { KafkaController } from './kafka/kafka.controller';
 import { User } from './users/user.entity';
@@ -25,6 +26,23 @@ import { UsersModule } from './users/users.module';
       inject: [ConfigService],
     }),
     UsersModule,
+    ClientsModule.register([
+      {
+        name: 'KAFKA_SERVICE',
+        transport: Transport.KAFKA,
+        options: {
+          client: {
+            clientId: 'nestjs-client',
+            brokers: ['localhost:9092'],
+          },
+          consumer: {
+            groupId: 'nestjs-group',
+            sessionTimeout: 30000,
+            heartbeatInterval: 10000,
+          },
+        },
+      },
+    ]),
   ],
   controllers: [KafkaController],
 })
