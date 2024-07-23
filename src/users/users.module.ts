@@ -19,6 +19,8 @@ import { UsersService } from './users.service';
           },
           consumer: {
             groupId: 'nestjs-group',
+            sessionTimeout: 30000,
+            heartbeatInterval: 10000,
           },
         },
       },
