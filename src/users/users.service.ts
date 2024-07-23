@@ -1,9 +1,11 @@
 import {
   ConflictException,
+  Inject,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
+import { ClientKafka } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import { Repository } from 'typeorm';
@@ -16,6 +18,8 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    @Inject('KAFKA_SERVICE')
+    private readonly kafkaClient: ClientKafka,
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
@@ -39,7 +43,15 @@ export class UsersService {
       password: hashedPassword,
       ...rest,
     });
-    return this.userRepository.save(user);
+
+    const savedUser = await this.userRepository.save(user);
+
+    this.kafkaClient.emit('user_created', {
+      id: savedUser.id,
+      email: savedUser.email,
+    });
+
+    return savedUser;
   }
 
   findAll(): Promise<User[]> {
