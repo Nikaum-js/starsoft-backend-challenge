@@ -28,21 +28,31 @@ import { UsersModule } from './users/users.module';
     }),
     UsersModule,
     CacheRedisModule,
-    ClientsModule.register([
+    ClientsModule.registerAsync([
       {
         name: 'KAFKA_SERVICE',
-        transport: Transport.KAFKA,
-        options: {
-          client: {
-            clientId: 'nestjs-client',
-            brokers: ['localhost:9092'],
+        imports: [ConfigModule],
+        inject: [ConfigService],
+        useFactory: async (configService: ConfigService) => ({
+          transport: Transport.KAFKA,
+          options: {
+            client: {
+              clientId: configService.get<string>('KAFKA_CLIENT_ID'),
+              brokers: [configService.get<string>('KAFKA_BROKER_URL')],
+              ssl: true,
+              sasl: {
+                mechanism: 'scram-sha-256', // or scram-sha-512
+                username: configService.get<string>('KAFKA_USERNAME'),
+                password: configService.get<string>('KAFKA_PASSWORD'),
+              },
+            },
+            consumer: {
+              groupId: 'nestjs-group',
+              sessionTimeout: 30000,
+              heartbeatInterval: 10000,
+            },
           },
-          consumer: {
-            groupId: 'nestjs-group',
-            sessionTimeout: 30000,
-            heartbeatInterval: 10000,
-          },
-        },
+        }),
       },
     ]),
   ],
