@@ -3,6 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { KafkaController } from './kafka/kafka.controller';
+import { CacheRedisModule } from './redis-cache.module';
 import { User } from './users/user.entity';
 import { UsersModule } from './users/users.module';
 
@@ -26,6 +27,7 @@ import { UsersModule } from './users/users.module';
       inject: [ConfigService],
     }),
     UsersModule,
+    CacheRedisModule,
     ClientsModule.register([
       {
         name: 'KAFKA_SERVICE',

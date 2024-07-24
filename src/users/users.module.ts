@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { CacheRedisModule } from 'src/redis-cache.module';
 import { User } from './user.entity';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
@@ -25,6 +26,7 @@ import { UsersService } from './users.service';
         },
       },
     ]),
+    CacheRedisModule,
   ],
   providers: [UsersService],
   controllers: [UsersController],

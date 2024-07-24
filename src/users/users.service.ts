@@ -7,6 +7,7 @@ import {
 import { ClientKafka } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
+import { RedisCacheRepository } from 'src/redis-cache.repository';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -19,6 +20,7 @@ export class UsersService {
     private readonly userRepository: Repository<User>,
     @Inject('KAFKA_SERVICE')
     private readonly kafkaClient: ClientKafka,
+    private readonly redisCacheRepository: RedisCacheRepository,
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
@@ -37,6 +39,7 @@ export class UsersService {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
+
     const user = this.userRepository.create({
       email,
       password: hashedPassword,
@@ -50,6 +53,8 @@ export class UsersService {
       email: savedUser.email,
     });
 
+    await this.redisCacheRepository.saveData(savedUser, `user-${savedUser.id}`);
+
     return savedUser;
   }
 
@@ -58,10 +63,22 @@ export class UsersService {
   }
 
   async findOne(id: string): Promise<User> {
+    const cachedUser = await this.redisCacheRepository.getData<User>(
+      `user-${id}`,
+    );
+
+    if (cachedUser) {
+      return cachedUser;
+    }
+
     const user = await this.userRepository.findOne({ where: { id } });
+
     if (!user) {
       throw new NotFoundException('User not found');
     }
+
+    await this.redisCacheRepository.saveData(user, `user-${id}`);
+
     return user;
   }
 
@@ -73,8 +90,10 @@ export class UsersService {
     }
 
     const { password, ...rest } = updateUserDto;
+
     if (password) {
       const hashedPassword = await bcrypt.hash(password, 10);
+
       Object.assign(user, rest, { password: hashedPassword });
     } else {
       Object.assign(user, rest);
@@ -87,6 +106,11 @@ export class UsersService {
       email: updatedUser.email,
     });
 
+    await this.redisCacheRepository.saveData(
+      updatedUser,
+      `user-${updatedUser.id}`,
+    );
+
     return updatedUser;
   }
 
@@ -98,5 +122,7 @@ export class UsersService {
       id: user.id,
       email: user.email,
     });
+
+    await this.redisCacheRepository.del(`user-${id}`);
   }
 }

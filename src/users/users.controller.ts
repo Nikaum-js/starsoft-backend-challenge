@@ -7,7 +7,7 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './user.entity';
@@ -38,6 +38,7 @@ export class UsersController {
 
   @ApiOperation({ summary: 'Get a user by ID' })
   @ApiResponse({ status: 200, description: 'Return a user by ID.', type: User })
+  @ApiParam({ name: 'id', description: 'The ID of the user to retrieve' })
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<User> {
     return this.usersService.findOne(id);
@@ -49,6 +50,7 @@ export class UsersController {
     description: 'The user has been successfully updated.',
     type: User,
   })
+  @ApiParam({ name: 'id', description: 'The ID of the user to update' })
   @Put(':id')
   async update(
     @Param('id') id: string,
@@ -62,6 +64,7 @@ export class UsersController {
     status: 204,
     description: 'The user has been successfully deleted.',
   })
+  @ApiParam({ name: 'id', description: 'The ID of the user to delete' })
   @Delete(':id')
   async remove(@Param('id') id: string): Promise<void> {
     return this.usersService.remove(id);
