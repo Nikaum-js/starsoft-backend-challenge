@@ -9,10 +9,10 @@ Este repositório contém o código para o desafio de backend da Starsoft. A apl
   - [Pré-requisitos](#pré-requisitos)
   - [Instalação](#instalação)
   - [Scripts Disponíveis](#scripts-disponíveis)
-    - [\`yarn dev\`](#yarn-dev)
-    - [\`yarn build\`](#yarn-build)
-    - [\`yarn start:prod\`](#yarn-startprod)
-    - [\`yarn lint\`](#yarn-lint)
+    - [`yarn dev`](#yarn-dev)
+    - [`yarn build`](#yarn-build)
+    - [`yarn start:prod`](#yarn-startprod)
+    - [`yarn lint`](#yarn-lint)
   - [Docker](#docker)
     - [Passos para rodar com Docker](#passos-para-rodar-com-docker)
   - [Testes](#testes)
@@ -47,7 +47,7 @@ Certifique-se de ter os seguintes softwares instalados em sua máquina:
 
 No diretório do projeto, você pode executar os seguintes comandos:
 
-### \`yarn dev\`
+### `yarn dev`
 
 Executa a aplicação em modo de desenvolvimento.
 Abra [http://localhost:3000](http://localhost:3000) para ver no navegador.
@@ -59,9 +59,9 @@ Você também verá erros de lint no console.
 yarn dev
 ```
 
-### \`yarn build\`
+### `yarn build`
 
-Constrói a aplicação para produção na pasta \`dist\`.
+Constrói a aplicação para produção na pasta `dist`.
 A aplicação está pronta para ser implantada!
 
 ```bash
@@ -71,13 +71,13 @@ yarn build
 ### \`yarn start:prod\`
 
 Inicia o servidor em modo de produção.
-Certifique-se de que você executou \`yarn build\` primeiro.
+Certifique-se de que você executou `yarn build` primeiro.
 
 ```bash
 yarn start:prod
 ```
 
-### \`yarn lint\`
+### `yarn lint`
 
 Executa o linter para verificar o código em busca de problemas de formatação e estilo.
 
