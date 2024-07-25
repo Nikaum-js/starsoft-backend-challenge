@@ -23,6 +23,9 @@ import { UsersModule } from './users/users.module';
         database: configService.get('DB_DATABASE'),
         entities: [User],
         synchronize: true,
+        ssl: {
+          rejectUnauthorized: false,
+        },
       }),
       inject: [ConfigService],
     }),
@@ -41,7 +44,7 @@ import { UsersModule } from './users/users.module';
               brokers: [configService.get<string>('KAFKA_BROKER_URL')],
               ssl: true,
               sasl: {
-                mechanism: 'scram-sha-256', // or scram-sha-512
+                mechanism: 'scram-sha-256',
                 username: configService.get<string>('KAFKA_USERNAME'),
                 password: configService.get<string>('KAFKA_PASSWORD'),
               },

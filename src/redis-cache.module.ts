@@ -10,9 +10,29 @@ import { RedisCacheRepository } from './redis-cache.repository';
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
         config: {
-          host: configService.get('REDIS_HOST'),
-          port: configService.get('REDIS_PORT'),
-          password: configService.get('REDIS_PASSWORD'),
+          host: configService.get<string>('REDIS_HOST'),
+          port: configService.get<number>('REDIS_PORT'),
+          password: configService.get<string>('REDIS_PASSWORD'),
+          tls: {
+            rejectUnauthorized: false,
+          },
+          maxRetriesPerRequest: 10,
+          retryStrategy: (times) => {
+            const delay = Math.min(times * 50, 2000);
+            console.log(
+              `Redis connection retry #${times}, retrying in ${delay}ms`,
+            );
+            return delay;
+          },
+          reconnectOnError: (err) => {
+            const targetError = 'READONLY';
+            if (err.message.includes(targetError)) {
+              return true;
+            }
+            return false;
+          },
+          connectTimeout: 10000,
+          enableReadyCheck: true,
         },
       }),
       inject: [ConfigService],

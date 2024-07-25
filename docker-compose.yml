@@ -4,9 +4,9 @@ services:
     image: postgres:13
     restart: always
     environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: mydb
+      POSTGRES_USER: starsoft_backend_challenge_db_user
+      POSTGRES_PASSWORD: BgbsQ55kXuUhTmxA8XXsnYpYPDNg17qm
+      POSTGRES_DB: starsoft_backend_challenge_db
     ports:
       - "5432:5432"
     volumes:
@@ -15,7 +15,10 @@ services:
   redis:
     image: redis:latest
     ports:
-      - "6379:6379"
+      - "6380:6379"
+    environment:
+      - REDIS_PASSWORD=Adi6AAIjcDFiYzVhNDkwM2E4YmQ0MjJiOWU4N2VjN2FiM2Y4N2Y4OHAxMA
+    command: ["redis-server", "--requirepass", "$REDIS_PASSWORD"]
 
   zookeeper:
     image: confluentinc/cp-zookeeper:7.2.1
