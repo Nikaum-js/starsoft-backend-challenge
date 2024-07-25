@@ -1,73 +1,125 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+const readmeContent = `
+# Starsoft Backend Challenge
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Este repositório contém o código para o desafio de backend da Starsoft. A aplicação é construída utilizando Nest.js e Yarn como gerenciador de pacotes. Este guia fornece instruções sobre como configurar, rodar e fazer o deploy do projeto.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Índice
 
-## Description
+- [Starsoft Backend Challenge](#starsoft-backend-challenge)
+  - [Índice](#índice)
+  - [Pré-requisitos](#pré-requisitos)
+  - [Instalação](#instalação)
+  - [Scripts Disponíveis](#scripts-disponíveis)
+    - [\`yarn dev\`](#yarn-dev)
+    - [\`yarn build\`](#yarn-build)
+    - [\`yarn start:prod\`](#yarn-startprod)
+    - [\`yarn lint\`](#yarn-lint)
+  - [Docker](#docker)
+    - [Passos para rodar com Docker](#passos-para-rodar-com-docker)
+  - [Testes](#testes)
+    - [Executar testes unitários e de integração](#executar-testes-unitários-e-de-integração)
+  - [Deploy](#deploy)
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Pré-requisitos
 
-## Installation
+Certifique-se de ter os seguintes softwares instalados em sua máquina:
+
+- Node.js (versão 18.x ou superior)
+- Yarn (versão 1.x ou superior)
+- Docker
+- Docker Compose
+
+## Instalação
+
+1. **Clone o repositório:**
+
+   ```bash
+   git clone https://github.com/Nikaum-js/starsoft-backend-challenge
+   cd starsoft-backend-challenge
+   ```
+
+2. **Instale as dependências:**
+
+   ```bash
+   yarn install
+   ```
+
+## Scripts Disponíveis
+
+No diretório do projeto, você pode executar os seguintes comandos:
+
+### \`yarn dev\`
+
+Executa a aplicação em modo de desenvolvimento.
+Abra [http://localhost:3000](http://localhost:3000) para ver no navegador.
+
+A página será recarregada se você fizer edições.
+Você também verá erros de lint no console.
 
 ```bash
-$ yarn install
+yarn dev
 ```
 
-## Running the app
+### \`yarn build\`
+
+Constrói a aplicação para produção na pasta \`dist\`.
+A aplicação está pronta para ser implantada!
 
 ```bash
-# development
-$ yarn run start
-
-# watch mode
-$ yarn run start:dev
-
-# production mode
-$ yarn run start:prod
+yarn build
 ```
 
-## Test
+### \`yarn start:prod\`
+
+Inicia o servidor em modo de produção.
+Certifique-se de que você executou \`yarn build\` primeiro.
 
 ```bash
-# unit tests
-$ yarn run test
-
-# e2e tests
-$ yarn run test:e2e
-
-# test coverage
-$ yarn run test:cov
+yarn start:prod
 ```
 
-## Support
+### \`yarn lint\`
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+Executa o linter para verificar o código em busca de problemas de formatação e estilo.
 
-## Stay in touch
+```bash
+yarn lint
+```
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+## Docker
 
-## License
+Também é possível rodar a aplicação utilizando Docker. Certifique-se de ter o Docker e o Docker Compose instalados em sua máquina.
 
-Nest is [MIT licensed](LICENSE).
+### Passos para rodar com Docker
+
+1. **Construa a imagem Docker:**
+
+   ```bash
+   docker-compose up --build
+   ```
+
+2. **Acesse a aplicação:**
+
+   Abra [http://localhost:3000](http://localhost:3000) para ver no navegador.
+
+## Testes
+
+O projeto utiliza Jest para testes unitários e de integração.
+
+### Executar testes unitários e de integração
+
+Para executar os testes, utilize o comando:
+
+```bash
+yarn test
+```
+
+Para executar os testes em modo watch durante o desenvolvimento, utilize o comando:
+
+```bash
+yarn test:watch
+```
+
+## Deploy
+
+Para fazer o deploy da aplicação, siga as instruções no arquivo [DEPLOY.md](./DEPLOY.md).
