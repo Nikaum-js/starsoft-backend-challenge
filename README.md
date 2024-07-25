@@ -1,4 +1,3 @@
-const readmeContent = `
 # Starsoft Backend Challenge
 
 Este repositório contém o código para o desafio de backend da Starsoft. A aplicação é construída utilizando Nest.js e Yarn como gerenciador de pacotes. Este guia fornece instruções sobre como configurar, rodar e fazer o deploy do projeto.
